@@ -1,0 +1,12 @@
+To Make config client 
+
+
+#import common  configuration from config server 
+spring.config.import=configserver:http://localhost:8085
+
+
+<!--to make config client  -->
+		<dependency>
+     		<groupId>org.springframework.cloud</groupId>
+      		<artifactId>spring-cloud-starter-config</artifactId>
+    	</dependency>

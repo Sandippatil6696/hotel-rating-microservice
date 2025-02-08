@@ -1,0 +1,71 @@
+#to create a circuit breaker 
+
+	<!-- below three dependaies for circuitbreaker  -->
+		<dependency>
+      		<groupId>org.springframework.boot</groupId>
+      		<artifactId>spring-boot-starter-actuator</artifactId>
+    	</dependency>
+
+		<dependency>
+      		<groupId>org.springframework.boot</groupId>
+      		<artifactId>spring-boot-starter-aop</artifactId>
+    	</dependency>
+
+		<dependency>
+      		<groupId>org.springframework.cloud</groupId>
+      		<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+    	</dependency>
+		
+		
+		
+		
+		  // to get single user
+		@GetMapping("/{userId}")
+		@CircuitBreaker(name = "HotelRatingcb" , fallbackMethod = "hotelRatingFallbackMrhod")
+		public ResponseEntity<User> getUserById(@PathVariable String userId) {
+			User user =userservice.getUserById(userId);
+			return ResponseEntity.ok(user);
+    }
+	
+	// create a fallback method in case of any service is down this method is called 
+    public ResponseEntity<User> hotelRatingFallbackMethod(String userId , Exception ex){
+        
+      User user = new User();
+                user.setUserId("1245");
+                user.setName("dummy user");
+                user.setEmail("dummy@gmail.com");
+                user.setAbout("this is dummy user");
+
+                return new ResponseEntity<>(user , HttpStatus.OK);
+    /*
+     *  User user =  User.builder()
+                    .userId("1245")
+                    .name("dummy user")
+                    .email("dummy@gmail.com")
+                    .about("this is a dummy user")
+                    .ratings(null)
+                    .build();
+     */
+       
+    }
+	
+	
+	
+	
+	
+#circuitbreaker configuration
+#actuator config
+management.health.circuitbreakers.enabled=true
+management.endpoints.web.exposure.include=health
+management.endpoint.health.show-details=always
+
+#resilence 4j configuration 
+resilience4j.circuitbreaker.instances.HotelRatingcb.register-health-indicator=true
+resilience4j.circuitbreaker.instances.HotelRatingcb.event-consumer-buffer-size=10
+resilience4j.circuitbreaker.instances.HotelRatingcb.failure-rate-threshold=50
+resilience4j.circuitbreaker.instances.HotelRatingcb.minimum-number-of-calls=5
+resilience4j.circuitbreaker.instances.HotelRatingcb.automatic-transition-from-open-to-half-open-enabled=true
+resilience4j.circuitbreaker.instances.HotelRatingcb.wait-duration-in-open-state=6s
+resilience4j.circuitbreaker.instances.HotelRatingcb.permitted-number-of-calls-in-half-open-state=3
+resilience4j.circuitbreaker.instances.HotelRatingcb.sliding-window-size=10
+resilience4j.circuitbreaker.instances.HotelRatingcb.sliding-window-type=count-based

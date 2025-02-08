@@ -1,0 +1,27 @@
+For making service registry cloud eureka server 
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+		</dependency>
+
+
+@EnableEurekaServer
+
+
+
+spring.application.name=ServiceRegistry
+
+#eureka default port is 8761
+server.port=8761
+#
+eureka.instance.hostname= localhost
+
+#to not register this service registry project as client 
+eureka.client.register-with-eureka=false
+eureka.client.fetch-registry=false

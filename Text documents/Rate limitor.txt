@@ -1,0 +1,36 @@
+#Rate Limitor -used for security and performance of application
+
+
+<!-- below three dependaies for Retry module  -->
+		<dependency>
+      		<groupId>org.springframework.boot</groupId>
+      		<artifactId>spring-boot-starter-actuator</artifactId>
+    	</dependency>
+
+		<dependency>
+      		<groupId>org.springframework.boot</groupId>
+      		<artifactId>spring-boot-starter-aop</artifactId>
+    	</dependency>
+
+		<dependency>
+      		<groupId>org.springframework.cloud</groupId>
+      		<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+    	</dependency>
+		
+		
+	// to get single user
+    @GetMapping("/{userId}")
+    @RateLimiter(name = "userRateLimitor" , fallbackMethod = "hotelRatingFallbackMethod")
+    public ResponseEntity<User> getUserById(@PathVariable String userId) {
+        logger.info("retry count");
+        User user =userservice.getUserById(userId);
+        return ResponseEntity.ok(user);
+    }
+		
+		
+#rate limitor config ths will request a 2 request per 4s per user
+resilience4j.ratelimiter.instances.userRateLimitor.limit-refresh-period=4s
+resilience4j.ratelimiter.instances.userRateLimitor.limit-for-period=2
+resilience4j.ratelimiter.instances.userRateLimitor.timeout-duration=0s
+
+install jmeter for checking multiplerequest within sec 

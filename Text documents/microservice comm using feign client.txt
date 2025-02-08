@@ -1,0 +1,20 @@
+Microservice communication using fein client 
+
+	<dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-openfeign</artifactId>
+    </dependency>
+	
+	
+	
+	
+@FeignClient(name = "HOTELSERVICE")
+public interface HotelService {
+
+
+    @GetMapping("hotel/{HotelId}")
+    Hotel getHotel(@PathVariable String HotelId);
+
+}
+
+  Hotel hotel = hotelservice.getHotel(rating.getHotelId());

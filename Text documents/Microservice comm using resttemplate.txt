@@ -1,0 +1,19 @@
+#Resttemple communication between microservices
+
+@Configuration
+public class MyConfig {
+
+    // created for microservice communication 
+    @LoadBalanced --- for url use microservice name intead of ip and port 
+    @Bean
+		public RestTemplate restTemplate(){
+			return new RestTemplate();
+		}
+
+
+}
+
+  @Autowired
+    private RestTemplate restTemplate;
+
+ Rating[] rate = restTemplate.getForObject("http://RATINGSERVICE/rating/user/"+user.getUserId(), Rating[].class);

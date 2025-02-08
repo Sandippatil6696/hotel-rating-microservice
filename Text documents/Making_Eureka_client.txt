@@ -1,0 +1,51 @@
+for making client on Eureka server add below depndancies 
+
+
+	<dependency>
+      		<groupId>org.springframework.cloud</groupId>
+      	 	<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+    </dependency>
+		
+		
+	<dependencyManagement>
+    	<dependencies>
+      		<dependency>
+        		<groupId>org.springframework.cloud</groupId>
+        		<artifactId>spring-cloud-dependencies</artifactId>
+        		<version>${spring-cloud.version}</version>
+        		<type>pom</type>
+        		<scope>import</scope>
+      		</dependency>
+    	</dependencies>
+  </dependencyManagement>
+  
+  <spring-cloud.version>2024.0.0</spring-cloud.version>
+  
+  
+  @EnableDiscoveryClient
+  
+  
+#for making eureka client
+eureka.client.fetch-registry=true
+eureka.instance.prefer-ip-address=true
+eureka.client.register-with-eureka=true
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka
+
+
+
+
+
+
+
+#example userservice 
+
+spring.application.name=userService
+
+http://localhost:8081/user/adda0bfd-a19d-4d1a-a5ad-91bfb0e92344
+
+#take a mane from eureka erver USERSERVICE
+#make dynamic url using microservice name 
+http://USERSERVICE/user/adda0bfd-a19d-4d1a-a5ad-91bfb0e92344
+
+@LoadBalanced user this anno for bean class for  dynamic url using microservice name
+

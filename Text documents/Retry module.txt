@@ -1,0 +1,59 @@
+#Retry module 
+
+
+<!-- below three dependaies for Retry module  -->
+		<dependency>
+      		<groupId>org.springframework.boot</groupId>
+      		<artifactId>spring-boot-starter-actuator</artifactId>
+    	</dependency>
+
+		<dependency>
+      		<groupId>org.springframework.boot</groupId>
+      		<artifactId>spring-boot-starter-aop</artifactId>
+    	</dependency>
+
+		<dependency>
+      		<groupId>org.springframework.cloud</groupId>
+      		<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+    	</dependency>
+
+
+// to get single user
+    @GetMapping("/{userId}")
+    @Retry(name = "HotelRatingRetry" , fallbackMethod = "hotelRatingFallbackMethod")
+    public ResponseEntity<User> getUserById(@PathVariable String userId) {
+        logger.info("retry count :" ,retryCount);
+        retryCount++;
+        User user =userservice.getUserById(userId);
+        return ResponseEntity.ok(user);
+    }
+	
+	
+	
+#retry module configuration
+resilience4j.retry.instances.HotelRatingRetry.max-attempts=3
+resilience4j.retry.instances.HotelRatingRetry.wait-duration=5s
+
+	
+	
+	// create a fallback method in case of any service is down this method is called 
+    public ResponseEntity<User> hotelRatingFallbackMethod(String userId , Exception ex){
+        
+      User user = new User();
+                user.setUserId("1245");
+                user.setName("dummy user");
+                user.setEmail("dummy@gmail.com");
+                user.setAbout("this is dummy user");
+
+                return new ResponseEntity<>(user , HttpStatus.OK);
+    /*
+     *  User user =  User.builder()
+                    .userId("1245")
+                    .name("dummy user")
+                    .email("dummy@gmail.com")
+                    .about("this is a dummy user")
+                    .ratings(null)
+                    .build();
+     */
+       
+    }

@@ -1,0 +1,82 @@
+
+
+
+Cloud Bootstrap Spring Cloud
+Non-specific Spring Cloud features, unrelated to external libraries or integrations (e.g. Bootstrap context and @RefreshScope).
+
+Reactive Gateway Spring Cloud Routing
+Provides a simple, yet effective way to route to APIs in reactive applications. Provides cross-cutting concerns to those APIs such as security, monitoring/metrics, and resiliency.
+
+Spring Reactive Web Web
+Build reactive web applications with Spring WebFlux and Netty.
+
+Lombok Developer Tools
+Java annotation library which helps to reduce boilerplate code.
+
+Eureka Discovery Client Spring Cloud Discovery
+A REST based service for locating services for the purpose of load balancing and failover of middle-tier servers.
+
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-gateway</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+
+
+server.port=8084
+
+#for making eureka client
+eureka.client.fetch-registry=true
+eureka.instance.prefer-ip-address=true
+eureka.client.register-with-eureka=true
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka
+
+
+#for making api gateway - to make common url for all microservices 
+#for userserivce
+spring.cloud.gateway.routes[0].id=USERSERVICE  ---microservices bame 
+spring.cloud.gateway.routes[0].uri=lb://USERSERVICE   --- microservice starting url
+spring.cloud.gateway.routes[0].predicates[0]=Path=/user/** 
+
+#for hotel service 
+spring.cloud.gateway.routes[1].id=HOTELSERVICE
+spring.cloud.gateway.routes[1].uri=lb://HOTELSERVICE
+spring.cloud.gateway.routes[1].predicates[0]=Path=/hotel/** ,  /staffs/** -- if i want multiple url starting with different name type here along with comma
+
+#for rating service 
+spring.cloud.gateway.routes[2].id=RATINGSERVICE
+spring.cloud.gateway.routes[2].uri=lb://RATINGSERVICE
+spring.cloud.gateway.routes[2].predicates[0]=Path=/rating/**
+
+
+
+
+
+
+
+
+
+@SpringBootApplication
+@EnableDiscoveryClient  -- for making client 
+public class ApiGatewayApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(ApiGatewayApplication.class, args);
+	}
+
+}
