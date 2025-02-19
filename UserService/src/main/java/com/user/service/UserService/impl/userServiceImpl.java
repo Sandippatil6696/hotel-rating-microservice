@@ -84,7 +84,7 @@ public class userServiceImpl implements userService{
     public List<User> deleteUserById(String userId) {
          userrepo.deleteById(userId);
          return getAllUser();
-         
+
     }
 
     @Override
